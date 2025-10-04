@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #333;
+    }
+
+    .calculator {
+      background: #fff;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.2);
+      width: 420px;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #4facfe;
+      font-size: 22px;
+      animation: slideDown 1s ease;
+    }
+
+    input {
+      width: 85%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: 2px solid #4facfe;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      border-color: #00c6ff;
+      box-shadow: 0px 0px 10px #4facfe;
+    }
+
+    button {
+      background: linear-gradient(135deg, #43e97b, #38f9d7);
+      border: none;
+      color: white;
+      padding: 10px 14px;
+      margin: 5px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: bold;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.08);
+      box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .result, .history {
+      margin-top: 15px;
+      background: #f1f9ff;
+      padding: 12px;
+      border-radius: 10px;
+      min-height: 40px;
+      box-shadow: inset 0px 3px 8px rgba(0,0,0,0.1);
+      text-align: left;
+      font-size: 14px;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-30px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    @keyframes slideDown {
+      from {opacity: 0; transform: translateY(-20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h2>Calculator by Waheed Abbas</h2>
+
+    <input type="text" id="input" placeholder="Enter numbers (e.g. 10 20)">
+    <br>
+
+    <!-- Basic Operations -->
+    <button onclick="add()">Add</button>
+    <button onclick="subtract()">Subtract</button>
+    <button onclick="multiply()">Multiply</button>
+    <button onclick="divide()">Divide</button>
+    <button onclick="exponentiation()">Power</button>
+    <button onclick="squareRoot()">√</button>
+    <button onclick="modulus()">Modulus</button>
+
+    <!-- Special Operations -->
+    <button onclick="factorial()">Factorial</button>
+    <button onclick="percentage()">Percentage</button>
+    <button onclick="gcdLcm()">GCD/LCM</button>
+    <button onclick="primeCheck()">Prime?</button>
+    <button onclick="evenOdd()">Even/Odd</button>
+    <button onclick="numberConversion()">Convert</button>
+    <button onclick="multiplicationTable()">Table</button>
+    <button onclick="sumOfDigits()">Digit Sum</button>
+    <button onclick="reverseNumber()">Reverse</button>
+
+    <!-- Utility -->
+    <button onclick="showHistory()">View History</button>
+    <button onclick="clearHistory()">Clear History</button>
+    <button onclick="clearInput()">Clear Input</button>
+
+    <div class="result" id="result">Result will appear here</div>
+    <div class="history" id="history">History will appear here</div>
+  </div>
+
+  <script>
+    let historyList = [];
+
+    function getNumbers() {
+      return document.getElementById("input").value.split(" ").map(Number);
+    }
+
+    function updateResult(text) {
+      document.getElementById("result").innerText = text;
+    }
+
+    function addHistory(entry) {
+      historyList.push(entry);
+    }
+
+    // ---------------- Functions ----------------
+    function add() {
+      let nums = getNumbers();
+      let res = nums.reduce((a, b) => a + b, 0);
+      updateResult("Sum = " + res);
+      addHistory(nums.join(" + ") + " = " + res);
+    }
+
+    function subtract() {
+      let nums = getNumbers();
+      let res = nums.reduce((a, b) => a - b);
+      updateResult("Difference = " + res);
+      addHistory(nums.join(" - ") + " = " + res);
+    }
+
+    function multiply() {
+      let nums = getNumbers();
+      let res = nums.reduce((a, b) => a * b, 1);
+      updateResult("Product = " + res);
+      addHistory(nums.join(" × ") + " = " + res);
+    }
+
+    function divide() {
+      let nums = getNumbers();
+      if (nums.includes(0)) {
+        updateResult("Error: Division by zero");
+        return;
+      }
+      let res = nums.reduce((a, b) => a / b);
+      updateResult("Quotient = " + res);
+      addHistory(nums.join(" ÷ ") + " = " + res);
+    }
+
+    function exponentiation() {
+      let nums = getNumbers();
+      if (nums.length < 2) { updateResult("Enter base and power"); return; }
+      let res = Math.pow(nums[0], nums[1]);
+      updateResult(nums[0] + "^" + nums[1] + " = " + res);
+      addHistory(nums[0] + "^" + nums[1] + " = " + res);
+    }
+
+    function squareRoot() {
+      let nums = getNumbers();
+      let res = Math.sqrt(nums[0]);
+      updateResult("√" + nums[0] + " = " + res);
+      addHistory("√" + nums[0] + " = " + res);
+    }
+
+    function modulus() {
+      let nums = getNumbers();
+      if (nums.length < 2) { updateResult("Enter two numbers"); return; }
+      let res = nums[0] % nums[1];
+      updateResult(nums[0] + " % " + nums[1] + " = " + res);
+      addHistory(nums[0] + " % " + nums[1] + " = " + res);
+    }
+
+    function factorial() {
+      let nums = getNumbers();
+      let n = nums[0];
+      let res = 1;
+      for (let i = 1; i <= n; i++) res *= i;
+      updateResult(n + "! = " + res);
+      addHistory(n + "! = " + res);
+    }
+
+    function percentage() {
+      let nums = getNumbers();
+      if (nums.length < 2) { updateResult("Enter part and whole"); return; }
+      let res = (nums[0] / nums[1]) * 100;
+      updateResult(nums[0] + " of " + nums[1] + " = " + res + "%");
+      addHistory(nums[0] + " of " + nums[1] + " = " + res + "%");
+    }
+
+    function gcdLcm() {
+      let nums = getNumbers();
+      let a = nums[0], b = nums[1];
+      function gcd(x, y) { return y ? gcd(y, x % y) : x; }
+      let g = gcd(a, b);
+      let l = (a * b) / g;
+      updateResult("GCD = " + g + ", LCM = " + l);
+      addHistory("GCD(" + a + "," + b + ")=" + g + " LCM=" + l);
+    }
+
+    function primeCheck() {
+      let n = getNumbers()[0];
+      let isPrime = n > 1 && [...Array(Math.floor(Math.sqrt(n)) + 1).keys()].slice(2).every(i => n % i !== 0);
+      updateResult(n + (isPrime ? " is Prime" : " is Not Prime"));
+      addHistory("Prime check " + n + ": " + isPrime);
+    }
+
+    function evenOdd() {
+      let n = getNumbers()[0];
+      updateResult(n + " is " + (n % 2 === 0 ? "Even" : "Odd"));
+      addHistory(n + " is " + (n % 2 === 0 ? "Even" : "Odd"));
+    }
+
+    function numberConversion() {
+      let n = getNumbers()[0];
+      let conv = "Binary: " + n.toString(2) + ", Octal: " + n.toString(8) + ", Hex: " + n.toString(16);
+      updateResult(conv);
+      addHistory("Conversions for " + n + ": " + conv);
+    }
+
+    function multiplicationTable() {
+      let n = getNumbers()[0];
+      let table = "";
+      for (let i = 1; i <= 10; i++) {
+        table += n + " × " + i + " = " + (n * i) + "\n";
+      }
+      updateResult("Table:\n" + table);
+      addHistory("Table of " + n);
+    }
+
+    function sumOfDigits() {
+      let n = Math.abs(getNumbers()[0]);
+      let sum = n.toString().split("").reduce((a, b) => a + Number(b), 0);
+      updateResult("Sum of digits = " + sum);
+      addHistory("Sum of digits in " + n + " = " + sum);
+    }
+
+    function reverseNumber() {
+      let n = getNumbers()[0];
+      let rev = Number(n.toString().split("").reverse().join(""));
+      updateResult("Reverse = " + rev);
+      addHistory("Reverse of " + n + " = " + rev);
+    }
+
+    // ---------------- History ----------------
+    function showHistory() {
+      const historyBox = document.getElementById("history");
+      if (historyList.length === 0) {
+        historyBox.innerText = "No history yet.";
+      } else {
+        historyBox.innerHTML = historyList.map(h => "👉 " + h).join("<br>");
+      }
+    }
+
+    function clearHistory() {
+      historyList = [];
+      document.getElementById("history").innerText = "History cleared.";
+    }
+
+    function clearInput() {
+      document.getElementById("input").value = "";
+      updateResult("Result will appear here");
+    }
+  </script>
+</body>
+</html>
